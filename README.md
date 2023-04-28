@@ -6,12 +6,13 @@ Import PlayOn:
 ```js
 import playon from "https://ninjadev64.github.io/PlayOn/playon.js";
 ```
-Or using vanilla JavaScript:
+Or using [vanilla JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import):
 ```js
 import("https://ninjadev64.github.io/PlayOn/playon.js").then((playon) => {
 	// use PlayOn here
 });
 ```
+If you wish to self-host or minify, simply download the library.
 
 Initialise PlayOn:
 ```js
@@ -24,11 +25,13 @@ Create a game:
 ```js
 playon.createGame().then((id) => { ... });
 ```
+PlayOn will handle removing games that are more than a day old automatically.
+
 Join a game:
 ```js
 playon.joinGame(id, username, initialData).then((game) => { ... });
 ```
-PlayOn will throw errors "GameNotFound" and "UsernameAlreadyTaken" from `joinGame` respectively.
+PlayOn will throw errors "GameNotFound" and "UsernameAlreadyTaken" from `joinGame` respectively. You should register existing players in your code when joining a game (see below for `game.players`).
 
 #### Setting data
 Setting global data:
@@ -40,6 +43,7 @@ Setting player-specific data:
 game.setPlayerData({ x: 20, y: 40 });
 ```
 Player data will not be re-written to the database if the contents have not changed. Both methods will not delete existing data, only update the desired values.
+Any Firebase limitations apply here (e.g. arrays are not supported).
 
 #### Listening for events
 ```js
@@ -60,4 +64,4 @@ game.players; // { "ninjadev64": { x: 20, y: 40 } ... }
 ```
 
 #### Example
-See the `examples` folder for an example.
+See the [example folder](https://github.com/ninjadev64/PlayOn/tree/master/example) for an example ([live demo](https://ninjadev64.github.io/PlayOn/example/)). The example uses [p5.js](https://p5js.org/) and [p5play](https://p5play.org/) to create a simple movement demo where the current player is highlighted in red.
