@@ -28,16 +28,18 @@ Join a game:
 ```js
 playon.joinGame(id, username, initialData).then((game) => { ... });
 ```
+PlayOn will throw errors "GameNotFound" and "UsernameAlreadyTaken" from `joinGame` respectively.
 
 #### Setting data
 Setting global data:
 ```js
-game.setGlobalData(data);
+game.setGlobalData({ "gameState": "waiting" });
 ```
 Setting player-specific data:
 ```js
-game.setPlayerData(data);
+game.setPlayerData({ x: 20, y: 40 });
 ```
+Player data will not be re-written to the database if the contents have not changed. Both methods will not delete existing data, only update the desired values.
 
 #### Listening for events
 ```js
@@ -48,6 +50,13 @@ function connectionChange(connected) { ... };
 
 // game.on(event, function);
 game.on("playerJoined", playerJoined);
+```
+
+#### Accessing data
+The below properties should only be read from. Use `setGlobalData` and `setPlayerData` to write to these properties as described above.
+```js
+game.globalData; // { "gameState": "waiting" }
+game.players; // { "ninjadev64": { x: 20, y: 40 } ... }
 ```
 
 #### Example
