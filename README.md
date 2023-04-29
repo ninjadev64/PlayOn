@@ -33,16 +33,16 @@ playon.joinGame(id, username, initialData).then((game) => { ... });
 ```
 PlayOn will throw errors "GameNotFound" and "UsernameAlreadyTaken" from `joinGame` respectively. You should register existing players in your code when joining a game (see below for `game.players`).
 
-#### Setting data
-Setting global data:
+#### Updating data
+Updating global data:
 ```js
-game.setGlobalData({ "gameState": "waiting" });
+game.updateGlobalData({ "gameState": "waiting" });
 ```
-Setting player-specific data:
+Updating player-specific data:
 ```js
-game.setPlayerData({ x: 20, y: 40 });
+game.updatePlayerData({ x: 20, y: 40 });
 ```
-Player data will not be re-written to the database if the contents have not changed. Both methods will not delete existing data, only update the desired values.
+Data will not be re-written to the database if the contents have not changed. Both methods will not delete existing data, only update the desired values.
 Any Firebase limitations apply here (e.g. arrays are not supported).
 
 #### Listening for events
@@ -57,11 +57,14 @@ game.on("playerJoined", playerJoined);
 ```
 
 #### Accessing data
-The below properties should only be read from. Use `setGlobalData` and `setPlayerData` to write to these properties as described above.
+The below properties should only be read from. Use `updateGlobalData` and `updatePlayerData` to write to these properties as described above.
 ```js
 game.globalData; // { "gameState": "waiting" }
 game.players; // { "ninjadev64": { x: 20, y: 40 } ... }
 ```
+
+#### Leaving
+Call `game.leave()` to deregister all internal listeners when the Game object is no longer needed.
 
 #### Example
 See the [example folder](https://github.com/ninjadev64/PlayOn/tree/master/example) for an example ([live demo](https://ninjadev64.github.io/PlayOn/example/)). The example uses [p5.js](https://p5js.org/) and [p5play](https://p5play.org/) to create a simple movement demo where the current player is highlighted in red.

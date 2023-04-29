@@ -28,12 +28,12 @@ export async function joinGame(id, username, playerData) {
 	if (playerData == undefined || Object.keys(playerData).length == 0) {
 		playerData = { "_": "_" };
 	}
+
 	let data = (await get(ref(database, id.toString()))).val();
 	if (data == undefined) throw new Error("GameNotFound");
 	if (data.players == undefined) data.players = {};
-	if (Object.hasOwn(data.players, username)) {
-		throw new Error("UsernameAlreadyTaken");
-	}
+	if (Object.hasOwn(data.players, username)) throw new Error("UsernameAlreadyTaken");
+	
 	update(ref(database, id.toString() + "/players"), {
 		[username]: playerData
 	});
@@ -73,12 +73,12 @@ class Game {
 		}
 		this.listeners = [];
 
-		this.listeners.push(onValue(ref(database, id.toString() + "/globalData"), (snapshot) => {
+		this.listeners.push(onValue(ref(database, `${id}/globalData`), (snapshot) => {
 			this.globalData = snapshot.val() || {};
 			this.handlers["globalDataUpdated"].forEach((func) => { func(this.globalData); });
 		}));
 
-		this.listeners.push(onValue(ref(database, id.toString() + "/players"), (snapshot) => {
+		this.listeners.push(onValue(ref(database, `${id}/players`), (snapshot) => {
 			for (const [k, v] of Object.entries(snapshot.val())) {
 				if (k == this.localPlayerName) continue;
 				let p = this.players[k];
@@ -104,16 +104,16 @@ class Game {
 		this.listeners.forEach((listener) => { off(listener); });
 	}
 
-	setGlobalData(data) {
+	updateGlobalData(data) {
+		if (lodash.isMatch(this.globalData, data)) return;
 		update(ref(database, this.id.toString()), {
 			globalData: data
 		});
 	}
 
-	setPlayerData(data) {
-		if (lodash.isEqual(data, this.localPlayerDataCache)) return false;
-		update(ref(database, this.id.toString() + "/players"), { [this.localPlayerName]: data });
+	updatePlayerData(data) {
+		if (lodash.isMatch(this.localPlayerDataCache, data)) return;
+		update(ref(database, `${this.id}/players/${this.localPlayerName}`), data);
 		this.localPlayerDataCache = data;
-		return true;
 	}
 }

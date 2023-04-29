@@ -58,7 +58,7 @@ import("../playon.js").then((playon) => {
 				players[name].position.y = data.y;
 			});
 			setInterval(() => {
-				game.setPlayerData({ x: self.position.x, y: self.position.y });
+				game.updatePlayerData({ x: self.position.x, y: self.position.y });
 			}, 10);
 		});
 	});
