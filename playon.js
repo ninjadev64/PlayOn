@@ -106,9 +106,7 @@ class Game {
 
 	updateGlobalData(data) {
 		if (lodash.isMatch(this.globalData, data)) return;
-		update(ref(database, this.id.toString()), {
-			globalData: data
-		});
+		update(ref(database, `${this.id}/globalData`), data);
 	}
 
 	updatePlayerData(data) {

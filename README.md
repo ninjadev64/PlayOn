@@ -4,7 +4,7 @@ A bare-bones JavaScript multiplayer game framework that utilises Firebase Realti
 #### Quick Start
 Import PlayOn:
 ```js
-import playon from "https://ninjadev64.github.io/PlayOn/playon.js";
+import * as playon from "https://ninjadev64.github.io/PlayOn/playon.js";
 ```
 Or using [vanilla JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import):
 ```js
