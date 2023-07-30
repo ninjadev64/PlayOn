@@ -79,16 +79,17 @@ class Game {
 		}));
 
 		this.listeners.push(onValue(ref(database, `${id}/players`), (snapshot) => {
+			let pl = Object.assign({}, this.players);
+			this.players = snapshot.val() || {};
 			for (const [k, v] of Object.entries(snapshot.val())) {
 				if (k == this.localPlayerName) continue;
-				let p = this.players[k];
+				let p = pl[k];
 				if (p == undefined) {
 					this.handlers["playerJoined"].forEach((func) => { func(k, v); });
 				} else if (!lodash.isEqual(p, v)) {
 					this.handlers["playerUpdated"].forEach((func) => { func(k, v); });
 				}
 			}
-			this.players = snapshot.val() || {};
 		}));
 
 		this.listeners.push(onValue(ref(database, ".info/connected"), (snap) => {
